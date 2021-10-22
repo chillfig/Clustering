@@ -59,7 +59,7 @@ def merge_cluster(distance_matrix, cluster_candidate, T):
 
     # add new cluster to dict
     cluster_candidate[T] = newClusterPts
-
+    # test
     # remove old clusters from dict
     cluster_candidate.pop(i)
     cluster_candidate.pop(j)
