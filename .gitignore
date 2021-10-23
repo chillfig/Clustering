@@ -1,0 +1,6 @@
+*.csv
+*.pdf
+mac_env/
+workspace/
+vscode/
+/ece595dm3.code-workspace
