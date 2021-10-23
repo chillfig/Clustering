@@ -45,25 +45,22 @@ def merge_cluster(distance_matrix, cluster_candidate, T):
          (cluster_two_id, point_ids_in_cluster_two)]
     '''
     merge_list = []
-    i = np.where(distance_matrix == np.amin(distance_matrix))[0][0] + 1 # merging cluster ID #1
-    j = np.where(distance_matrix == np.amin(distance_matrix))[0][1] + 1 # merging cluster ID #2
+    cluster_candidate.setdefault(T, [])
+    i = np.where(distance_matrix == np.amin(distance_matrix))[0][0] # point's row index from merging cluster 1
+    j = np.where(distance_matrix == np.amin(distance_matrix))[0][1] # point's col index from merging cluster 1
     
-    # save points from both merging clusters in a list
-    cluster1Pts = cluster_candidate[i]
-    cluster2Pts = cluster_candidate[j]
-    newClusterPts = list(cluster1Pts + cluster2Pts)
-    newClusterPts.sort()
+    # identify the merging clusters and store in list
+    for point in i,j:
+        for key, values in cluster_candidate.items():
+            if point in values:
+                merge_list.append((key,values))
+                cluster_candidate.pop(key)
+                break
+    merge_list.sort()
     
-    # record two old clusters' id and points into merge_list
-    
-
-    # add new cluster to dict
-    cluster_candidate[T] = newClusterPts
-    # test
-    # remove old clusters from dict
-    cluster_candidate.pop(i)
-    cluster_candidate.pop(j)
-
+    for merge in merge_list:
+        for merge_pts in merge[1]:
+                cluster_candidate[T].append(merge_pts)        
 
     # TODO
 
@@ -71,7 +68,7 @@ def merge_cluster(distance_matrix, cluster_candidate, T):
 
 
 def update_distance(distance_matrix, cluster_candidate, merge_list):
-    ''' Update the distantce matrix
+    ''' Update the distance matrix
     
     Parameters:
     ------------
@@ -89,7 +86,11 @@ def update_distance(distance_matrix, cluster_candidate, merge_list):
     distance_matrix: 2-D array
         updated distance matrix       
     '''
-    
+    for i in merge_list[0][1]:
+        for j in merge_list[1][1]:
+            distance_matrix[i,j] = 100000
+            distance_matrix[j,i] = 100000
+
     # TODO
     
     return distance_matrix  
